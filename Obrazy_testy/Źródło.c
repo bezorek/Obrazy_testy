@@ -188,6 +188,8 @@ int main() {
 			for (int i = 0; i < tmp.height; i++) {
 				for (int j = 0; j < tmp.width; j++) {
 					tmp.macierz[i][j] = tmp.depth - tmp.macierz[i][j];
+					//this is the rythm of the night!
+					//my Min ou Yeah!
 					printf("%d ", tmp.macierz[i][j]);
 				}
 				printf("\n");
