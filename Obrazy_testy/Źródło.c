@@ -21,7 +21,7 @@ struct Obraz wczytaj_plik() {
 	char nazwa_pliku[100];
 	int koniec = 0;
 	int znak;
-	printf("Podaj nazwe pliku do odczytania:");
+	printf("Podaj nazwe pliku do odczytania z rozszerzeniem .pgm:");
 	scanf("%s", &nazwa_pliku);
 	if ((pgm = fopen(nazwa_pliku, "r")) == NULL) {
 		printf("Brak takiej nazwy pliku!");
@@ -109,16 +109,39 @@ void dodaj_baza(struct Obraz** baza, int* wielkosc, struct Obraz myImage) {
 
 }
 
+void zapis(struct Obraz tmp)
+{
 
-int main() {
-	int *tab;
+	char litery[20];
+	FILE* plik;
+	printf("Podaj nazwe pliku:");
+	scanf("%s", &litery);
+	strcat(litery, ".pgm");
+	plik = fopen(litery, "w");
+
+	fprintf(plik, "P2\n");
+	fprintf(plik, "%d %d\n%d\n", tmp.width, tmp.height, tmp.depth);
+	for (int i = 0; i < tmp.height; i++) {
+		for (int j = 0; j < tmp.width; j++) {
+			fprintf(plik, "%d ", tmp.macierz[i][j]);
+		}
+		fprintf(plik, "\n");
+	}
+	fclose(plik);
+}
+
+
+int main()
+{
+	int* tab;
 	int wybor;
 	int k;
 	struct Obraz tmp;
 	struct Obraz* baza;
 	struct Obraz myImage;
 	int wielkosc = 0;
-	if (baza = (struct Obraz*)calloc(wielkosc, sizeof(struct Obraz))) {
+	if (baza = (struct Obraz*)calloc(wielkosc, sizeof(struct Obraz)))
+	{
 		printf("Udana callocacja!\n");
 	}
 
@@ -164,11 +187,13 @@ int main() {
 
 		case 4:
 		{
+			zapis(tmp);
 
-			char litery[20];
+			/*char litery[20];
 			FILE* plik;
-			printf("Podaj nazwe pliku z rozszerzeniem .pgm:");
+			printf("Podaj nazwe pliku:");
 			scanf("%s", &litery);
+			strcat(litery, ".pgm");
 			plik = fopen(litery, "w");
 
 			fprintf(plik, "P2\n");
@@ -179,7 +204,7 @@ int main() {
 				}
 				fprintf(plik, "\n");
 			}
-			fclose(plik);
+			fclose(plik);*/
 		}
 		break;
 
@@ -205,17 +230,19 @@ int main() {
 
 		case 7:
 		{
+			char histogram[100];
 			int x;
 			int count = 0;
-			tab = calloc(tmp.depth, sizeof(int));
-			for (x = 0; x < tmp.depth; x++)
+			tab = calloc(256, sizeof(int));
+			for (x = 0; x < 256; x++)
 			{
+				count = 0;
 				tab[x] = 0;
 				for (int i = 0; i < tmp.height; i++)
 				{
 					for (int j = 0; j < tmp.width; j++)
 					{
-						if (tmp.macierz[i][j] = x + 1)
+						if (tmp.macierz[i][j] == x)
 						{
 							count++;
 						}
@@ -223,12 +250,16 @@ int main() {
 				}
 				tab[x] = count;
 			}
-			printf("Tablica histogramu\n");
-			for (int i = 0; i < tmp.depth; i++)
+			char litery[20];
+			FILE* plik;
+			strcpy(histogram, tmp.nazwa_Pliku);
+			strcat(histogram, ".csv");
+			plik = fopen(histogram , "w");
+			for (int i = 0; i < 256; i++)
 			{
-				printf("%d ", tab[x]);
+				fprintf(plik, "%d,%d\n", i, tab[i]);
 			}
-			printf("\n");
+
 		}
 		break;
 		}
